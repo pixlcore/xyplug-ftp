@@ -1,0 +1,320 @@
+{
+	"type": "xypdf",
+	"description": "xyOps Portable Data Object",
+	"version": "1.0",
+	"items": [
+		{
+			"type": "plugin",
+			"data": {
+				"id": "pmftpq4v6r8n2xkz",
+				"title": "FTP Transfer",
+				"enabled": true,
+				"type": "event",
+				"command": "npx -y @pixlcore/xyplug-ftp@1.0.0",
+				"script": "",
+				"kill": "all",
+				"notes": "Upload, download, list, and delete files on FTP and FTPS servers.",
+				"icon": "folder-network-outline",
+				"params": [
+					{
+						"id": "hostname",
+						"title": "FTP Hostname",
+						"type": "text",
+						"value": "",
+						"caption": "Remote FTP hostname or IP address, e.g. `ftp.example.com` or `10.0.0.25`.",
+						"required": true
+					},
+					{
+						"id": "username",
+						"title": "Username",
+						"type": "text",
+						"value": "",
+						"caption": "The FTP username to connect with.  Leave blank to use `FTP_USER` secret variable."
+					},
+					{
+						"id": "password",
+						"title": "Password",
+						"type": "text",
+						"variant": "password",
+						"value": "",
+						"caption": "Optional FTP password. For production use, prefer setting `FTP_PASSWORD` in a xyOps Secret Vault."
+					},
+					{
+						"id": "port",
+						"title": "Port",
+						"type": "text",
+						"variant": "number",
+						"value": 21,
+						"caption": "The FTP TCP port. Plain FTP and explicit FTPS usually use `21`; implicit FTPS often uses `990`."
+					},
+					{
+						"id": "secure",
+						"title": "Security Mode",
+						"type": "select",
+						"value": "Plain FTP [false], Explicit FTPS [true], Implicit FTPS [implicit]",
+						"caption": "Choose plain FTP or FTPS. FTPS is strongly recommended when your server supports it."
+					},
+					{
+						"id": "reject_unauthorized",
+						"title": "Reject Unauthorized TLS Certs",
+						"type": "checkbox",
+						"value": true,
+						"caption": "When using FTPS, reject self-signed or otherwise untrusted TLS certificates."
+					},
+					{
+						"id": "timeout_sec",
+						"title": "Timeout (sec)",
+						"type": "text",
+						"variant": "number",
+						"value": 30,
+						"caption": "How long to wait for FTP commands before timing out."
+					},
+					{
+						"id": "verbose",
+						"title": "Verbose Logging",
+						"type": "checkbox",
+						"value": false,
+						"caption": "Log FTP protocol details to the job log. Passwords are redacted."
+					},
+					{
+						"id": "allow_separate_transfer_host",
+						"title": "Allow Separate Transfer Host",
+						"type": "checkbox",
+						"value": false,
+						"caption": "Advanced: allow the FTP server to redirect data transfers to another host. Only enable this for servers you trust."
+					},
+					{
+						"id": "tool",
+						"title": "Tool Select",
+						"type": "toolset",
+						"caption": "Select which FTP operation to perform.",
+						"data": {
+							"tools": [
+								{
+									"id": "uploadFiles",
+									"title": "Upload Files",
+									"description": "Upload job input files or local files to an FTP server.",
+									"fields": [
+										{
+											"id": "localPath",
+											"title": "Local Path",
+											"type": "text",
+											"value": "",
+											"caption": "The local file or directory to upload from. Leave blank to use the xyOps job temp directory and job input files."
+										},
+										{
+											"id": "filespec",
+											"title": "Filename Pattern",
+											"type": "text",
+											"value": "",
+											"caption": "Optionally filter local files using a glob pattern, e.g. `*.csv` or `*.txt,*.log`."
+										},
+										{
+											"id": "remotePath",
+											"title": "Remote Path",
+											"type": "text",
+											"value": "",
+											"caption": "Remote FTP directory to upload into. Leave blank to use the FTP login directory."
+										},
+										{
+											"id": "recursive",
+											"title": "Include Subfolders",
+											"type": "checkbox",
+											"value": false,
+											"caption": "Upload matching files from subdirectories too, preserving their relative paths."
+										}
+									]
+								},
+								{
+									"id": "downloadFiles",
+									"title": "Download Files",
+									"description": "Download FTP files to disk, optionally attaching them to the job output.",
+									"fields": [
+										{
+											"id": "remotePath",
+											"title": "Remote Path",
+											"type": "text",
+											"value": "",
+											"caption": "Remote FTP directory to download from. Leave blank to use the FTP login directory."
+										},
+										{
+											"id": "filespec",
+											"title": "Filename Pattern",
+											"type": "text",
+											"value": "",
+											"caption": "Optionally filter remote files using a glob pattern, e.g. `*.csv` or `*.txt,*.log`."
+										},
+										{
+											"id": "localPath",
+											"title": "Local Path",
+											"type": "text",
+											"value": "",
+											"caption": "Local directory to save downloaded files in. Leave blank to use the xyOps job temp directory."
+										},
+										{
+											"id": "recursive",
+											"title": "Include Subfolders",
+											"type": "checkbox",
+											"value": false,
+											"caption": "Download matching files from subdirectories too, preserving their relative paths."
+										},
+										{
+											"id": "delete",
+											"title": "Delete Files",
+											"type": "checkbox",
+											"value": false,
+											"caption": "Delete each remote FTP file after it is successfully downloaded."
+										},
+										{
+											"id": "attach",
+											"title": "Attach Files",
+											"type": "checkbox",
+											"value": true,
+											"caption": "Attach downloaded files to the xyOps job output for downstream workflow steps."
+										},
+										{
+											"id": "max",
+											"title": "Maximum Files",
+											"type": "text",
+											"variant": "number",
+											"value": 0,
+											"caption": "Optionally set a maximum number of files to download. `0` means no limit."
+										},
+										{
+											"id": "sort",
+											"title": "Sort Files",
+											"type": "select",
+											"value": "Name / Path [path], Newest First [newest], Oldest First [oldest], Largest First [largest], Smallest First [smallest]",
+											"caption": "Optionally sort the files before downloading. Useful when combined with maximum."
+										}
+									]
+								},
+								{
+									"id": "listFiles",
+									"title": "List Files",
+									"description": "List remote FTP files with optional filters and return metadata.",
+									"fields": [
+										{
+											"id": "remotePath",
+											"title": "Remote Path",
+											"type": "text",
+											"value": "",
+											"caption": "Remote FTP directory to list. Leave blank to use the FTP login directory."
+										},
+										{
+											"id": "filespec",
+											"title": "Filename Pattern",
+											"type": "text",
+											"value": "",
+											"caption": "Optionally filter remote files using a glob pattern, e.g. `*.csv` or `*.txt,*.log`."
+										},
+										{
+											"id": "recursive",
+											"title": "Include Subfolders",
+											"type": "checkbox",
+											"value": false,
+											"caption": "List matching files from subdirectories too."
+										},
+										{
+											"id": "older",
+											"title": "Older Than",
+											"type": "text",
+											"value": "",
+											"caption": "Optionally include only files older than this relative time, e.g. `7 days` or `3600`."
+										},
+										{
+											"id": "newer",
+											"title": "Newer Than",
+											"type": "text",
+											"value": "",
+											"caption": "Optionally include only files newer than this relative time, e.g. `2 hours` or `900`."
+										},
+										{
+											"id": "max",
+											"title": "Maximum Files",
+											"type": "text",
+											"variant": "number",
+											"value": 0,
+											"caption": "Optionally set a maximum number of files to return. `0` means no limit."
+										},
+										{
+											"id": "sort",
+											"title": "Sort Files",
+											"type": "select",
+											"value": "Name / Path [path], Newest First [newest], Oldest First [oldest], Largest First [largest], Smallest First [smallest]",
+											"caption": "Optionally sort the files before returning metadata."
+										}
+									]
+								},
+								{
+									"id": "deleteFiles",
+									"title": "Delete Files",
+									"description": "Delete remote FTP files with optional filters.",
+									"fields": [
+										{
+											"id": "remotePath",
+											"title": "Remote Path",
+											"type": "text",
+											"value": "",
+											"caption": "Remote FTP directory to delete from. Leave blank to use the FTP login directory."
+										},
+										{
+											"id": "filespec",
+											"title": "Filename Pattern",
+											"type": "text",
+											"value": "",
+											"caption": "Optionally filter remote files using a glob pattern, e.g. `*.tmp` or `*.bak,*.old`."
+										},
+										{
+											"id": "recursive",
+											"title": "Include Subfolders",
+											"type": "checkbox",
+											"value": false,
+											"caption": "Delete matching files from subdirectories too."
+										},
+										{
+											"id": "older",
+											"title": "Older Than",
+											"type": "text",
+											"value": "",
+											"caption": "Optionally delete only files older than this relative time, e.g. `30 days` or `86400`."
+										},
+										{
+											"id": "newer",
+											"title": "Newer Than",
+											"type": "text",
+											"value": "",
+											"caption": "Optionally delete only files newer than this relative time, e.g. `1 hour` or `3600`."
+										},
+										{
+											"id": "max",
+											"title": "Maximum Files",
+											"type": "text",
+											"variant": "number",
+											"value": 0,
+											"caption": "Optionally set a maximum number of files to delete. `0` means no limit."
+										},
+										{
+											"id": "sort",
+											"title": "Sort Files",
+											"type": "select",
+											"value": "Oldest First [oldest], Newest First [newest], Name / Path [path], Largest First [largest], Smallest First [smallest]",
+											"caption": "Optionally sort the files before deleting. Useful when combined with maximum."
+										},
+										{
+											"id": "dry",
+											"title": "Dry Run",
+											"type": "checkbox",
+											"value": false,
+											"caption": "Preview matched files without actually deleting anything."
+										}
+									]
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	]
+}
