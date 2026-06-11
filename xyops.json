@@ -10,7 +10,7 @@
 				"title": "FTP Transfer",
 				"enabled": true,
 				"type": "event",
-				"command": "npx -y @pixlcore/xyplug-ftp@1.0.0",
+				"command": "npx -y @pixlcore/xyplug-ftp@1.0.1",
 				"script": "",
 				"kill": "all",
 				"notes": "Upload, download, list, and delete files on FTP and FTPS servers.",
@@ -35,7 +35,6 @@
 						"id": "password",
 						"title": "Password",
 						"type": "text",
-						"variant": "password",
 						"value": "",
 						"caption": "Optional FTP password. For production use, prefer setting `FTP_PASSWORD` in a xyOps Secret Vault."
 					},
