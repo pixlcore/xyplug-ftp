@@ -2,6 +2,7 @@
 	"type": "xypdf",
 	"description": "xyOps Portable Data Object",
 	"version": "1.0",
+	"xyops": "1.0.67",
 	"items": [
 		{
 			"type": "plugin",
@@ -10,7 +11,7 @@
 				"title": "FTP Transfer",
 				"enabled": true,
 				"type": "event",
-				"command": "npx -y @pixlcore/xyplug-ftp@1.0.1",
+				"command": "npx -y @pixlcore/xyplug-ftp@1.0.2",
 				"script": "",
 				"kill": "all",
 				"notes": "Upload, download, list, and delete files on FTP and FTPS servers.",
